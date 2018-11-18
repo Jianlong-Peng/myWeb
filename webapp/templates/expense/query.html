@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}花销查询{% endblock %}
+{% block navigation_login %}
+    <a href="{{ url_for('index.index') }}" class="btn">主页</a>
+    <a href="{{ url_for('expense.home') }}" class="btn">日常开销</a>
+    <a href="{{ url_for('index.index') }}" class="btn">美食</a>
+    <a href="{{ url_for('index.index') }}" class="btn">照片</a>
+{% endblock %}
+{% block body%}
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="text-left">你想查询哪个时间段的开销？</h1>
+			<form method="POST" action={{ url_for('.query') }}>
+				{{ form.hidden_tag() }}
+				<div class="form-group">
+					{% if form.start_date.errors %}
+						{% for e in form.start_date.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+					{% if form.end_date.errors %}
+						{% for e in form.end_date.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+					from {{ form.start_date }} to {{ form.end_date }}
+				</div>
+				<div class="form-group">
+					{% if form.per_page.errors %}
+						{% for e in form.per_page.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+                    每页显示{{ form.per_page }}条记录
+				</div>
+				<input class="btn btn-primary" type="submit" value="提交"> <a href="{{ url_for('.home') }}" class="btn">取消</a>
+			</form>
+		</div>
+    </div>
+{% endblock %}
+
+{% block js %}
+	<script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
+	<script>
+		CKEDITOR.replace('editor');
+	</script>
+{% endblock %}
+

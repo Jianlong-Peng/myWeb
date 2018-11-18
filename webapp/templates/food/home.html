@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}美食{% endblock %}
+{% block navigation_login %}
+    <a href="{{ url_for('index.index') }}" class="btn">Home</a>
+    <a href="{{ url_for('expense.home') }}" class="btn">日常开销</a>
+    <a href="{{ url_for('food.home') }}" class="btn">美食</a>
+{% endblock %}
+{% block body %}
+<p>敬请期待</p>
+{% endblock %}
+

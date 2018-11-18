@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<div class="row">
+	<div class="col-lg-6">
+		<p>目录</p>
+		<ul>
+			<li><a href="{{ url_for('expense.home') }}">日常开销</a></li>
+			<li><a href="{{ url_for('food.home') }}">美食</a></li>
+			<li><a href="{{ url_for('index.index') }}">照片</a></li>
+		</ul>
+	</div>
+</div>
+{% endblock %}
+

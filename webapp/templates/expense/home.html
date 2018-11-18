@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}日常开销{% endblock %}
+{% block navigation_login %}
+	<a href="{{ url_for('index.index') }}" class="btn">主页</a>
+    <a href="{{ url_for('expense.home') }}" class="btn">日常开销</a>
+    <a href="{{ url_for('food.home') }}" class="btn">美食</a>
+    <a href="{{ url_for('index.index') }}" class="btn">照片</a>
+{% endblock %}
+{% block body %}
+<div class="row">
+	<div class="col-lg-9">
+		<div class="row">
+			<a href="{{ url_for('.account') }}" class="btn">资金账号</a>
+		</div>
+		<div class="row">
+			<a href="{{ url_for('.record') }}" class="btn">消费记录</a>
+		</div>
+		<div class="row">
+			<a href="{{ url_for('.query') }}" class="btn">消费查询</a>
+		</div>
+		<div class="row">
+			<a href="{{ url_for('.home') }}" class="btn">消费统计</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

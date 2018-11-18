@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}更新账号余额{% endblock %}
+{% block navigation_login %}
+    <a href="{{ url_for('index.index') }}" class="btn">主页</a>
+    <a href="{{ url_for('expense.home') }}" class="btn">日常开销</a>
+{% endblock %}
+{% block body%}
+	<div class="row">
+		<div class="col-lg-8">
+			<h3 class="text-left">更新账号“{{ account.name }}”的金额</h3>
+			<form method="POST" action={{ url_for('.account_update', account_id=account.id) }}>
+				{{ form.hidden_tag() }}
+				<div class="form-group">
+					金额（元）
+					{% if form.amount.errors %}
+						{% for e in form.amount.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+					{{ form.amount(class_='form-control', value=account.amount) }}
+				</div>
+				<input class="btn btn-primary" type="submit" value="提交"> <a href="{{ url_for('.account') }}" class="btn">取消</a>
+			</form>
+		</div>
+    </div>
+{% endblock %}
+
+{% block js %}
+	<script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
+	<script>
+		CKEDITOR.replace('editor');
+	</script>
+{% endblock %}
+
