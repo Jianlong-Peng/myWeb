@@ -19,6 +19,15 @@
 					{% endif %}
 					{{ form.amount(class_='form-control', value=account.amount) }}
 				</div>
+                <div class="form-group">
+                    说明
+					{% if form.description.errors %}
+						{% for e in form.description.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+					{{ form.description(class_='form-control') }}
+                </div>
 				<input class="btn btn-primary" type="submit" value="提交"> <a href="{{ url_for('.account') }}" class="btn">取消</a>
 			</form>
 		</div>

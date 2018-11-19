@@ -27,6 +27,7 @@ def make_shell_context():
 @manager.command
 def init_db():
     import random
+    import datetime
     db.create_all()
     
     default = User('default')
@@ -40,6 +41,7 @@ def init_db():
         new_account.amount = random.random()*(i+1)
         new_account.description = "random account {}".format(i+1)
         new_account.user_id = default.id
+        new_account.date = datetime.datetime.now()
         db.session.add(new_account)
 
     db.session.commit()

@@ -59,7 +59,9 @@ class AccountForm(FlaskForm):
     description = StringField("Description", validators=[DataRequired()])
 
 class UpdateForm(FlaskForm):
+    ## account = SelectField("Account", validator=[DataRequired()])
     amount = FloatField("Amount", validators=[DataRequired()])
+    description = StringField("Description", default=u"日常更新", validators=[optional()])
 
 class ExpenseForm(FlaskForm):
     ## category = SelectField("Category",choices=[(item,item) for item in candidate_categories], validators=[DataRequired()])
@@ -89,6 +91,8 @@ class TransferForm(FlaskForm):
     ##     check_validate = super(TransferForm, self).validate()
     ##     if not check_validate:
     ##         return False
+
+
 
         
 

@@ -80,13 +80,37 @@ class User(db.Model):
 class Account(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(255))
+    founds = db.relationship(
+        'Found',
+        backref = 'account',
+        lazy = 'dynamic'
+    )
+    #latest amount
     amount = db.Column(db.Float())
     description = db.Column(db.Text())
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    date = db.Column(db.DateTime())
 
     def __repr__(self):
         return "<Account '{0}', Amount '{1}', Description '{2}'>".format(self.name, self.amount, self.description)
 
+#记录历史金额
+class Found(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    account_id = db.Column(db.Integer(), db.ForeignKey('account.id'))
+    amount = db.Column(db.Float())
+    date = db.Column(db.DateTime())
+    description = db.Column(db.String())
+
+    def __repr__(self):
+        return "<The Account '{0}' has {1} Yuan at {2}".format(self.get_account_name(), self.amount, self.date)
+
+    def get_account_name(self):
+        if self.account_id is None: return "N/A"
+        else:
+            a = Account.query.get(self.account_id)
+            if a is None: return "N/A"
+            else: return a.name
 
 
 candidate_categories = [u"伙食",u"零食",u"衣服",u"交通",u"房租",u"水电煤气",u"其它"]

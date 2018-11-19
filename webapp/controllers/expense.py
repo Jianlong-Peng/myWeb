@@ -1,3 +1,4 @@
+#encoding=utf-8
 import os
 from flask import render_template, Blueprint, redirect, url_for, session, g, flash, abort, request
 from flask_login import login_required, current_user
@@ -9,7 +10,7 @@ from sqlalchemy import func,and_
 ## from wtforms import StringField, TextAreaField
 ## from wtforms.validators import DataRequired, Length
 import datetime
-from webapp.models import db, User, Account, Expense, Category
+from webapp.models import db, User, Account, Expense, Category, Found
 from webapp.forms import AccountForm, UpdateForm, ExpenseForm, QueryForm, TransferForm
 ## from webapp.extensions import poster_permission, admin_permission
 
@@ -70,6 +71,14 @@ def account_new():
             new_account.amount = float(form.amount.data)
             new_account.description = form.description.data
             new_account.user_id = int(current_user.get_id())
+            new_account.date = datetime.datetime.now()
+            new_found = Found()
+            new_found.account_id = new_account.id
+            new_found.user_id = int(current_user.get_id())
+            new_found.amount = form.amount.data
+            new_found.date = datetime.datetime.now()
+            new_found.description = u"初始"
+            db.session.add(new_found)
             db.session.add(new_account)
             db.session.commit()
             return redirect(url_for(".account"))
@@ -85,7 +94,14 @@ def account_update(account_id):
     form = UpdateForm()
 
     if form.validate_on_submit():
-        account.amount = float(form.amount.data)
+        new_found = Found()
+        new_found.account_id = account.id
+        new_found.amount = form.amount.data
+        new_found.date = datetime.datetime.now()
+        new_found.description = form.description.data
+        account.amount = form.amount.data
+        account.date = datetime.datetime.now()
+        db.session.add(new_found)
         db.session.add(account)
         db.session.commit()
         return redirect(url_for(".account"))
@@ -97,6 +113,9 @@ def account_update(account_id):
 def record():
     form = ExpenseForm()
     form.account.choices = [(item.id,item.name) for item in Account.query.filter_by(user_id=int(current_user.get_id())).all()]
+    ## if len(form.account.choices) == 0:
+    ##     flash(u"你当前没有任何“资金账号”。要记录消费情况，请先创建“资金账号”。每笔消费记录将被关联到一个“资金账号”上", category="error")
+    ##     return redirect(url_for(".account_new"))
     form.category.choices = [(item.id, item.category) for item in Category.query.all()]
     if form.validate_on_submit():
         if current_user.is_anonymous():

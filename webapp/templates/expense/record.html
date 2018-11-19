@@ -9,8 +9,10 @@
 {% block body%}
 	<div class="row">
 		<div class="col-lg-8">
-			<h1 class="text-center">请记录你的花销</h1>
-            <a href="{{ url_for('.transfer') }}" class="btn">点击此记录资金账号间转账</a>
+            {% if form.account.choices|length == 0 %}
+			<h1 class="small">你当前没有任何“资金账号”。要记录消费情况，请先创建“资金账号”。每笔消费记录将被关联到一个“资金账号”上。点击<a href="{{ url_for('.account_new') }}" class="btn">此处</a>记录资金账号间转账。</h1>
+            {% else %}
+            <a href="{{ url_for('.transfer') }}" class="btn">点击此处记录资金账号间转账。</a>
 			<form method="POST" action={{ url_for('.record') }}>
 				{{ form.hidden_tag() }}
 				<div class="form-group">
@@ -35,7 +37,7 @@
 					{{ form.amount(class_='form-control') }}
 				</div>
 				<div class="form-group">
-					资金账号
+					资金账号 <p3 class="small">（没有找到合适的资金账号？点击<a href="{{ url_for('.account_new') }}">此处</a>创建新的资金账号）</p3>
 					{% if form.account.errors %}
 						{% for e in form.account.errors %}
 							<p class="help-block" style="color:red">{{ e }}</p>
@@ -64,6 +66,7 @@
 				</div>
 				<input class="btn btn-primary" type="submit" value="提交"> <a href="{{ url_for('.home') }}" class="btn">取消</a>
 			</form>
+            {% endif %}
 		</div>
     </div>
 {% endblock %}

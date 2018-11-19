@@ -104,7 +104,7 @@ def register():
         db.session.commit()
 
         flash("Your user has been created, please login.", category="success")
-        return redirect(url_for('index.index'))
+        return redirect(url_for('.login'))
 
     ## if form.errors:
     ##     flash(form.errors)

@@ -7,6 +7,9 @@
     <a href="{{ url_for('index.index') }}" class="btn">照片</a>
 {% endblock %}
 {% block body %}
+    {% if accounts.count() == 0 %}
+    <p3 class="">你当前没有任何资金账号。点击<a href="{{ url_for('.account_new') }}">此处</a>创建资金账号</p3>
+    {%else%}
     <p3>{{ username }}的资金账号<p3> <a href="{{ url_for('.account_new') }}" class="btn">+ 添加资金账号</a>
 	<div class="row">
         <div class="col-lg-12">
@@ -16,6 +19,7 @@
                         <th>账号名称</th>
                         <th>金额（元）</th>
                         <th>说明</th>
+                        <th>创建/更新日期</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,6 +28,7 @@
                         <th><a href="{{ url_for('.account_update', account_id=account.id) }}" class="btn" data-toggle="tooltip" title="点击进行更新">{{ account.name }}</a></th>
                         <th>{{ account.amount }}</th>
                         <th>{{ account.description }}</th>
+                        <th>{{ account.date }}</th>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -34,5 +39,6 @@
     <script>
     $(function () { $("[data-toggle='tooltip']").tooltip(); });
     </script>
+    {% endif %}
 {% endblock %}
 
