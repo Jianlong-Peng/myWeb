@@ -78,10 +78,11 @@ class QueryForm(FlaskForm):
     start_date = DateField("Start_date", default=datetime.now()-timedelta(7), validators=[DataRequired()])
     end_date = DateField("End_date", default=datetime.now()+timedelta(1), validators=[optional()])
     per_page = IntegerField("Per_page", default=10, validators=[optional()])
+    if_transfer = BooleanField("If_transfer", default=False, validators=[optional()])
 
 class TransferForm(FlaskForm):
-    source = SelectField("Source", validators=[DataRequired()])
-    target = SelectField("Target", validators=[DataRequired()])
+    source = SelectField("Source", validators=[DataRequired()], coerce=int)
+    target = SelectField("Target", validators=[DataRequired()], coerce=int)
     amount = FloatField("Amount", validators=[DataRequired()])
     description = StringField("Description", default=u"转账", validators=[DataRequired()])
     date = DateField("Date", default=datetime.now(), validators=[optional()])

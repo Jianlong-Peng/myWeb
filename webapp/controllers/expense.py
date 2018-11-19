@@ -10,7 +10,7 @@ from sqlalchemy import func,and_
 ## from wtforms import StringField, TextAreaField
 ## from wtforms.validators import DataRequired, Length
 import datetime
-from webapp.models import db, User, Account, Expense, Category, Found
+from webapp.models import db, User, Account, Expense, Category, Found, Transfer
 from webapp.forms import AccountForm, UpdateForm, ExpenseForm, QueryForm, TransferForm
 ## from webapp.extensions import poster_permission, admin_permission
 
@@ -143,21 +143,42 @@ def query():
             flash("Please login first!",category="error")
             return redirect(url_for("main.login"))
         else:
-            ## recent = Expense.query.filter(and_(Expense.date>=start_time, Expense.date<=end_date)).all()
-            recent = Expense.query.filter(Expense.date.between(form.start_date.data,form.end_date.data)).paginate(page=1, per_page=form.per_page.data)
-            ## return redirect(url_for(".show", expenses=recent.items, pagination=recent, start_date=form.start_date.data, end_date=form.end_date.data, per_page=form.per_page.data))
-            return render_template("show.html", expenses=recent.items, pagination=recent, start_date=form.start_date.data, end_date=form.end_date.data, per_page=form.per_page.data)
+            if form.if_transfer.data:
+                recent = Transfer.query.filter(Transfer.date.between(form.start_date.data,form.end_date.data)).paginate(page=1, per_page=form.per_page.data)
+                return render_template("show_transfer.html", transfers=recent.items, pagination=recent, start_date=form.start_date.data, end_date=form.end_date.data, per_page=form.per_page.data)
+            else:
+                recent = Expense.query.filter(Expense.date.between(form.start_date.data,form.end_date.data)).paginate(page=1, per_page=form.per_page.data)
+                return render_template("show_expense.html", expenses=recent.items, pagination=recent, start_date=form.start_date.data, end_date=form.end_date.data, per_page=form.per_page.data)
     return render_template("query.html", form=form)
+## @expense_blueprint.route("/query_expense", methods=("GET","POST"))
+## def query_expense():
+##     form = QueryForm()
+##     if form.validate_on_submit():
+##         if current_user.is_anonymous():
+##             flash("Please login first!",category="error")
+##             return redirect(url_for("main.login"))
+##         else:
+##             recent = Expense.query.filter(Expense.date.between(form.start_date.data,form.end_date.data)).paginate(page=1, per_page=form.per_page.data)
+##             return render_template("show_expense.html", expenses=recent.items, pagination=recent, start_date=form.start_date.data, end_date=form.end_date.data, per_page=form.per_page.data)
+##     return render_template("query_expense.html", form=form)
 
-@expense_blueprint.route("/show", methods=("GET","POST"))
-## def show(pagination=None, start_date=None, end_date=None, page=None, per_page=None):
-def show():
+@expense_blueprint.route("/show_expense", methods=("GET","POST"))
+def show_expense():
     page = int(request.args.get("page"))
     per_page = int(request.args.get("per_page"))
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
     recent = Expense.query.filter(Expense.date.between(start_date, end_date)).paginate(page=page,per_page=per_page)
-    return render_template("show.html", expenses=recent.items, pagination=recent, start_date=start_date, end_date=end_date, per_page=per_page)
+    return render_template("show_expense.html", expenses=recent.items, pagination=recent, start_date=start_date, end_date=end_date, per_page=per_page)
+
+@expense_blueprint.route("/show_transfer", methods=("GET","POST"))
+def show_transfer():
+    page = int(request.args.get("page"))
+    per_page = int(request.args.get("per_page"))
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    recent = Transfer.query.filter(Transfer.date.between(start_date, end_date)).paginate(page=page,per_page=per_page)
+    return render_template("show_transfer.html", transfers=recent.items, pagination=recent, start_date=start_date, end_date=end_date, per_page=per_page)
 
 @expense_blueprint.route("/transfer", methods=("GET","POST"))
 def transfer():
@@ -168,9 +189,12 @@ def transfer():
     form.source.choices = [(item.id,item.name) for item in Account.query.filter_by(user_id=int(current_user.get_id())).all()]
     form.target.choices = [(item.id,item.name) for item in Account.query.filter_by(user_id=int(current_user.get_id())).all()]
     if form.validate_on_submit():
+        print "form.source.data:",form.source.data
         transfer = Transfer()
-        transfer.source = Account.query.filter(Account.name==form.source.data).first_or_404().id
-        transfer.target = Account.query.filter(Account.name==form.target.data).first_or_404().id
+        transfer.source = form.source.data
+        transfer.target = form.target.data
+        ## transfer.source = Account.query.filter(Account.name==form.source.data).first_or_404().id
+        ## transfer.target = Account.query.filter(Account.name==form.target.data).first_or_404().id
         transfer.amount = form.amount.data
         transfer.description = form.description.data
         transfer.date = form.date.data
