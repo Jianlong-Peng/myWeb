@@ -76,7 +76,7 @@ class ExpenseForm(FlaskForm):
 
 class QueryForm(FlaskForm):
     start_date = DateField("Start_date", default=datetime.now()-timedelta(7), validators=[DataRequired()])
-    end_date = DateField("End_date", default=datetime.now()+timedelta(1), validators=[optional()])
+    end_date = DateField("End_date", default=datetime.now()+timedelta(0,0,1), validators=[optional()])
     per_page = IntegerField("Per_page", default=10, validators=[optional()])
     if_transfer = BooleanField("If_transfer", default=False, validators=[optional()])
 
@@ -93,6 +93,15 @@ class TransferForm(FlaskForm):
     ##     if not check_validate:
     ##         return False
 
+
+class StatExpenseForm(FlaskForm):
+    start_date = DateField("Start_date", default=datetime.now()-timedelta(7), validators=[DataRequired()])
+    end_date = DateField("End_Date", default=datetime.now()+timedelta(0,0,1),  validators=[DataRequired()])
+
+class StatAccountForm(FlaskForm):
+    account = SelectField("Account", validators=[DataRequired()], coerce=int)
+    start_date = SelectField("Start_date", validators=[DataRequired()], coerce=datetime)
+    end_date = SelectField("End_Date", validators=[DataRequired()], coerce=datetime)
 
 
         

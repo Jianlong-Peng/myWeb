@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}日常开销{% endblock %}
+{% block navigation_login %}
+	<a href="{{ url_for('index.index') }}" class="btn">主页</a>
+    <a href="{{ url_for('expense.home') }}" class="btn">日常开销</a>
+    <a href="{{ url_for('food.home') }}" class="btn">美食</a>
+    <a href="{{ url_for('index.index') }}" class="btn">照片</a>
+{% endblock %}
+{% block body %}
+<div class="row">
+	<div class="col-lg-9">
+		<div class="row">
+			查询某个时间段内消费记录
+            <form methods="POST", action={{ url_for('.stat') }}>
+                {{ form_expense.hidden_tag() }}
+				<div class="form-group">
+					{% if form_expense.start_date.errors %}
+						{% for e in form_expense.start_date.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+					{% if form_expense.end_date.errors %}
+						{% for e in form_expense.end_date.errors %}
+							<p class="help-block" style="color:red">{{ e }}</p>
+						{% endfor %}
+					{% endif %}
+					from {{ form_expense.start_date }} to {{ form_expense.end_date }}
+				</div>
+                <input class="btn btn-primary" type="submit" value="提交"> <a href="{{ url_for('.home') }}" class="btn">取消</a>
+            </form>
+		</div>
+		<div class="row">
+			查询资金账号两次记录间的情况
+            <form methods="POST", action={{ url_for('.stat') }}>
+                {{ form_account.hidden_tag() }}
+                <div class="form-group">
+                    account
+                    {% if form_account.account.errors %}
+                        {% for e in form_account.account.errors %}
+                            <p class="help-block" style="color:red">{{ e }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form_account.account(class_='form-control') }}
+                </div>
+                <div class="form-group">
+                    from {{ form_account.start_date }} to {{ form_account.end_date }}
+                </div>
+                <input class="btn btn-primary" type="submit" value="提交"> <a href="{{ url_for('.home') }}" class="btn">取消</a>
+            </form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

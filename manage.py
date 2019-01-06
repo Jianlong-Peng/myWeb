@@ -2,7 +2,7 @@ from flask_script import Manager, Server
 from flask_script.commands import ShowUrls, Clean
 from flask_migrate import Migrate, MigrateCommand
 from webapp import create_app
-from webapp.models import db, User, Account, Expense, Category, candidate_categories
+from webapp.models import db, User, Account, Expense, Category, candidate_categories, Found
 from webapp.forms import LoginForm, RegisterForm, QueryForm#, OpenIDForm
 import os
 import datetime
@@ -21,7 +21,7 @@ manager.add_command("clean",Clean())
 @manager.shell
 def make_shell_context():
     ## return dict(app=app, db=db, User=User)
-    return dict(app=app, db=db, User=User, Account=Account, Expense=Expense, Category=Category, QueryForm=QueryForm)
+    return dict(app=app, db=db, User=User, Account=Account, Expense=Expense, Category=Category, QueryForm=QueryForm, Found=Found)
 
 
 @manager.command

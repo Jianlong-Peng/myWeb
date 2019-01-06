@@ -11,7 +11,7 @@ from sqlalchemy import func,and_
 ## from wtforms.validators import DataRequired, Length
 import datetime
 from webapp.models import db, User, Account, Expense, Category, Found, Transfer
-from webapp.forms import AccountForm, UpdateForm, ExpenseForm, QueryForm, TransferForm
+from webapp.forms import AccountForm, UpdateForm, ExpenseForm, QueryForm, TransferForm, StatExpenseForm, StatAccountForm
 ## from webapp.extensions import poster_permission, admin_permission
 
 expense_blueprint = Blueprint(
@@ -203,5 +203,23 @@ def transfer():
         db.session.commit()
         return redirect(url_for(".home"))
     return render_template("transfer.html", form=form)
+
+@expense_blueprint.route("/stat")
+def stat():
+    if current_user.is_anonymous():
+        flash("Please login first!",category="error")
+        return redirect(url_for("main.login"))
+    form_expense = StatExpenseForm()
+    form_account = StatAccountForm()
+    form_account.account.choices = [(item.id,item.name) for item in Account.query.filter_by(user_id=int(current_user.get_id())).all()]
+    print ">>>>>>> form_account.account.data:",form_account.account.data
+    form_account.start_date.choices = [(item.date, item.date) for item in Found.query.filter_by(account=form_account.account.data).order_by(Found.date).all()]
+    form_account.end_date.choices = [(item.date, item.date) for item in Found.query.filter_by(account=form_account.account.data).order_by(Found.date).all()]
+    if form_expense.validate_on_submit():
+        return render_template("stat_zone_expense.html")
+    if form_account.validate_on_submit():
+        return render_template("stat_zone_account.html")
+    return render_template("stat.html", form_expense=form_expense, form_account=form_account)
+
 
 
