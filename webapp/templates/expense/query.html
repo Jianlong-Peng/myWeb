@@ -13,7 +13,7 @@
 			<form method="POST" action={{ url_for('.query') }}>
 				{{ form.hidden_tag() }}
 				<div class="form-group">
-                    <input type="text" name="startTime" class="form-control" readonly></td>
+                    <!--<input type="text" name="startTime" class="form-control" readonly></td>-->
 					{% if form.start_date.errors %}
 						{% for e in form.start_date.errors %}
 							<p class="help-block" style="color:red">{{ e }}</p>
