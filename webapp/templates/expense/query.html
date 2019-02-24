@@ -13,6 +13,7 @@
 			<form method="POST" action={{ url_for('.query') }}>
 				{{ form.hidden_tag() }}
 				<div class="form-group">
+                    <input type="text" name="startTime" class="form-control" readonly></td>
 					{% if form.start_date.errors %}
 						{% for e in form.start_date.errors %}
 							<p class="help-block" style="color:red">{{ e }}</p>
@@ -23,7 +24,7 @@
 							<p class="help-block" style="color:red">{{ e }}</p>
 						{% endfor %}
 					{% endif %}
-					from {{ form.start_date }} to {{ form.end_date }}
+					from {{ form.start_date(type="date") }} to {{ form.end_date(type="date") }}
 				</div>
 				<div class="form-group">
 					{% if form.per_page.errors %}
@@ -40,5 +41,18 @@
 			</form>
 		</div>
     </div>
+
+<script type="text/javascript">
+    $("input[name='startTime']").datetimepicker({
+        minView : "day",
+        language : 'zh-CN',
+        autoclose : true,
+        format : 'yyyy-mm-dd hh:00:00',
+        todayBtn : true,
+        startDate : new Date() ,
+            endDate : new Date()
+    })
+</script>
+
 {% endblock %}
 

@@ -4,7 +4,11 @@ class Config(object):
     pass
 
 class ProdConfig(Config):
-    pass
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(os.path.pardir, "database.db")
+    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SECRET_KEY = "2ae6ffe92174935aaefd4b24084ed5ed"
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 class DevConfig(Config):
     DEBUG = True
