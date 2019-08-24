@@ -13,6 +13,7 @@ app = create_app('webapp.config.%sConfig'%env.capitalize())
 migrate = Migrate(app,db)
 
 manager = Manager(app)
+manager.add_command("runserver", Server(host = '0.0.0.0',port=8090))
 manager.add_command("server",Server())
 manager.add_command("db",MigrateCommand)
 manager.add_command("show-urls",ShowUrls())
