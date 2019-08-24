@@ -113,7 +113,7 @@ class Found(db.Model):
             else: return a.name
 
 
-candidate_categories = [u"伙食",u"零食",u"衣服",u"交通",u"房租",u"水电煤气",u"其它"]
+candidate_categories = [u"伙食",u"零食",u"衣服",u"交通",u"房租",u"水电煤气",u"房贷",u"装修",u"医疗",u"购房",u"物业",u"其它"]
 
 class Category(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
